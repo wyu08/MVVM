@@ -1,4 +1,4 @@
-# MVVM
+# MVVM - Mario Delgado M
 Aplicación que recupera y muestra citas.
 
 -MVVM
