@@ -4,6 +4,7 @@ Aplicación que recupera y muestra citas o frases de diferentes autores.
 -MVVM
 -RetroFit
 -Hilt
+-Room
 -Corrutinas
 -Test
 
