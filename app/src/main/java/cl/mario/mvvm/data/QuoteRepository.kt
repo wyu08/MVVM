@@ -1,15 +1,32 @@
 package cl.mario.mvvm.data
 
-import cl.mario.mvvm.data.model.QuoteModel
-import cl.mario.mvvm.data.model.QuoteProvider
+import cl.mario.mvvm.data.database.dao.QuoteDao
+import cl.mario.mvvm.data.database.entities.QuoteEntity
 import cl.mario.mvvm.data.network.QuoteService
+import cl.mario.mvvm.domain.model.Quote
+import cl.mario.mvvm.domain.model.toDomain
 import javax.inject.Inject
 
-class QuoteRepository @Inject constructor(private val api:QuoteService , private val quoteProvider: QuoteProvider){
+class QuoteRepository @Inject constructor(
+    private val api: QuoteService,
+    private val quoteDao: QuoteDao
+) {
 
-    suspend fun getAllQuotes():List<QuoteModel>{
+    suspend fun getAllQuotesFromApi(): List<Quote> {
         val response = api.getQuotes()
-        quoteProvider.quotes = response
-        return response
+        return response.map { it.toDomain() }
+    }
+
+    suspend fun getAllQuotesFromDatabase(): List<Quote> {
+        val response = quoteDao.getAllQuotes()
+        return response.map { it.toDomain() }
+    }
+
+    suspend fun insertQuotes(quotes:List<QuoteEntity>){
+        quoteDao.insertAll(quotes)
+    }
+
+    suspend fun clearQuotes(){
+        quoteDao.deleteAllQuotes()
     }
 }

@@ -1,12 +1,12 @@
 package cl.mario.mvvm.domain
 
-import cl.mario.mvvm.data.model.QuoteModel
-import cl.mario.mvvm.data.model.QuoteProvider
+import cl.mario.mvvm.data.QuoteRepository
+import cl.mario.mvvm.domain.model.Quote
 import javax.inject.Inject
 
-class GetRandomQuote @Inject constructor(private val quoteProvider: QuoteProvider){
-    operator fun invoke():QuoteModel?{
-        val quotes = quoteProvider.quotes
+class GetRandomQuote @Inject constructor(private val repository: QuoteRepository){
+    suspend operator fun invoke(): Quote?{
+        val quotes = repository.getAllQuotesFromDatabase()
 
         if(!quotes.isNullOrEmpty()){
             val randomNumber = (quotes.indices).random()

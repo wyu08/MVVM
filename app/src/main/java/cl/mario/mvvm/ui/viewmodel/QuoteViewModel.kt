@@ -3,9 +3,9 @@ package cl.mario.mvvm.ui.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cl.mario.mvvm.data.model.QuoteModel
 import cl.mario.mvvm.domain.GetQuotes
 import cl.mario.mvvm.domain.GetRandomQuote
+import cl.mario.mvvm.domain.model.Quote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,7 +16,7 @@ class QuoteViewModel @Inject constructor(
     private val getRandomQuote: GetRandomQuote
 ) : ViewModel(){
 
-    val quoteModel = MutableLiveData<QuoteModel>()
+    val quoteModel = MutableLiveData<Quote>()
     val isLoading  = MutableLiveData<Boolean>()
 
     fun onCreate() {
@@ -31,11 +31,14 @@ class QuoteViewModel @Inject constructor(
     }
 
     fun randomQuote(){
-        isLoading.postValue(true)
-        val quote = getRandomQuote()
-        if(quote != null){
-            quoteModel.postValue(quote)
+        viewModelScope.launch {
+            isLoading.postValue(true)
+            val quote = getRandomQuote()
+            if (quote != null) {
+                quoteModel.postValue(quote)
+            }
+            isLoading.postValue(false)
         }
-        isLoading.postValue(false)
+
     }
 }
